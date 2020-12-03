@@ -46,3 +46,22 @@
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3),
     0 15px 12px rgba(0, 0, 0, 0.1) /* inset 0 0 25px #7e57c2 */;
 }
+
+.loadingIcon {
+  margin: auto;
+  /* background: rgb(255, 255, 255); */
+  display: block;
+  --darkreader-inline-bgimage: initial;
+  --darkreader-inline-bgcolor: #181a1b;
+  shape-rendering: auto;
+}
+
+.loadingIcon .cirlce1 {
+  --darkreader-inline-fill: #ba0a47;
+}
+.loadingIcon .cirlce2 {
+  --darkreader-inline-fill: #0d909e;
+}
+.loadingIcon .cirlce3 {
+  --darkreader-inline-fill: #ba0a47;
+}
