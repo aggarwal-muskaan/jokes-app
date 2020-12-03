@@ -15,7 +15,7 @@ class Joke extends Component {
       return { color: "#FFC107", emo: "em em-neutral_face" };
     else if (this.props.votes >= 0)
       return { color: "#FF9800", emo: "em em-confused" };
-    else return { color: "#f444336", emo: "em em-angry" };
+    else return { color: "#f44336", emo: "em em-angry" };
   }
 
   render() {
@@ -46,7 +46,10 @@ class Joke extends Component {
         <div className="Joke-text">{this.props.text}</div>
 
         <div className="Joke-emo">
-          <i class={obj.emo} aria-label="ROLLING ON THE FLOOR LAUGHING"></i>
+          <i
+            class={obj.emo}
+            // aria-label="ROLLING ON THE FLOOR LAUGHING"
+          ></i>
         </div>
       </div>
     );

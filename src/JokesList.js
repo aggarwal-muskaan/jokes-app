@@ -13,17 +13,19 @@ class JokesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      jokes: [],
+      jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    //if no jokes in localStorage
+    if (this.state.jokes.length === 0) this.getJokes();
+  }
+
+  //Function to Loads new jokes
+  async getJokes() {
     var jokeArr = [];
-
-    // for (var i = 0; i < this.props.numOfJokes; i++) {
-    //   this.setState({ jokes: [...this.state.jokes, jokes] });
-    // }
-
     while (jokeArr.length < this.props.numOfJokes) {
       var jokesAPI = await axios.get("https://icanhazdadjoke.com/", {
         headers: { Accept: "application/json" },
@@ -32,16 +34,35 @@ class JokesList extends Component {
       jokeArr.push({ joke: jokes, votes: 0, id: uuid() });
     }
 
-    this.setState({ jokes: jokeArr });
-    console.log(this.state.jokes);
+    this.setState(
+      (st) => ({
+        /*alternate way to combine two array of objects
+                 // jokes: [].concat(st.jokes, jokeArr)*/
+        jokes: [...st.jokes, ...jokeArr],
+      }),
+      () => {
+        window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes));
+      }
+    );
   }
 
   handleVote(id, delta) {
-    this.setState((st) => ({
-      jokes: st.jokes.map((j) =>
-        j.id === id ? { ...j, votes: j.votes + delta } : j
-      ),
-    }));
+    this.setState(
+      (st) => ({
+        jokes: st.jokes.map((j) =>
+          j.id === id ? { ...j, votes: j.votes + delta } : j
+        ),
+      }),
+      () => {
+        //update votes to localStorage
+        window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes));
+      }
+    );
+  }
+
+  handleClick() {
+    //calling async function that requests for more new jokes
+    this.getJokes();
   }
 
   render() {
@@ -362,7 +383,9 @@ class JokesList extends Component {
             </g>
           </svg>
           {/* <img src="laugh_emoji.svg" alt="Laugh Emo" /> */}
-          <button className="JokesList-new-jokes">New Jokes</button>
+          <button className="JokesList-new-jokes" onClick={this.handleClick}>
+            New Jokes ?
+          </button>
         </div>
 
         <div className="JokesList-jokes">
