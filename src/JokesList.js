@@ -13,9 +13,11 @@ class JokesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      /*structure=> jokes:[{joke:"",vote:'',id:""},{},{},...]*/
       jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
       loadSpinner: false,
     };
+    this.checkJokes = new Set(this.state.jokes.map((j) => j.joke));
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -26,27 +28,36 @@ class JokesList extends Component {
 
   //Function to Loads new jokes
   async getJokes() {
-    var jokeArr = [];
-    while (jokeArr.length < this.props.numOfJokes) {
-      var jokesAPI = await axios.get("https://icanhazdadjoke.com/", {
-        headers: { Accept: "application/json" },
-      });
-      var jokes = jokesAPI.data.joke;
-      jokeArr.push({ joke: jokes, votes: 0, id: uuid() });
-    }
-    // debugger;
-
-    this.setState(
-      (st) => ({
-        /*alternate way to combine two array of objects
-                 // jokes: [].concat(st.jokes, jokeArr)*/
-        loadSpinner: false,
-        jokes: [...st.jokes, ...jokeArr],
-      }),
-      () => {
-        window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes));
+    try {
+      var jokeArr = [];
+      while (jokeArr.length < this.props.numOfJokes) {
+        var jokesAPI = await axios.get("https://icanhazdadjoke.com/", {
+          headers: { Accept: "application/json" },
+        });
+        var jokes = jokesAPI.data.joke;
+        if (!this.checkJokes.has(jokes))
+          jokeArr.push({ joke: jokes, votes: 0, id: uuid() });
       }
-    );
+      // debugger;
+
+      this.setState(
+        (st) => ({
+          /*alternate way to combine two array of objects
+                   // jokes: [].concat(st.jokes, jokeArr)*/
+          loadSpinner: false,
+          jokes: [...st.jokes, ...jokeArr],
+        }),
+        () => {
+          window.localStorage.setItem(
+            "jokes",
+            JSON.stringify(this.state.jokes)
+          );
+        }
+      );
+    } catch (err) {
+      alert(err);
+      this.setState({ loadSpinner: false });
+    }
   }
 
   handleVote(id, delta) {
@@ -148,6 +159,9 @@ class JokesList extends Component {
       </div>
     );
 
+    //sorting jokes
+    let sortedJokes = this.state.jokes.sort((x, y) => y.votes - x.votes);
+
     //variable printing Data
     let printJokes = (
       <div className="JokesList">
@@ -156,11 +170,11 @@ class JokesList extends Component {
           <CatLaugh className="cat-laugh-emo" />
           {/* <img src="laugh_emoji.svg" alt="Laugh Emo" /> */}
           <button className="JokesList-new-jokes" onClick={this.handleClick}>
-            New Jokes ?
+            Fetch Jokes
           </button>
         </div>
         <div className="JokesList-jokes">
-          {this.state.jokes.map((j) => (
+          {sortedJokes.map((j) => (
             <Joke
               text={j.joke}
               votes={j.votes}
