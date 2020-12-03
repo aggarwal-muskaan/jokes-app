@@ -55,6 +55,7 @@ class JokesList extends Component {
         }
       );
     } catch (err) {
+      //handles error
       alert(err);
       this.setState({ loadSpinner: false });
     }

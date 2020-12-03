@@ -114,3 +114,26 @@
     transform: translateY(3px);
   }
 }
+
+@media (max-width: 799px) {
+  .Joke-buttons {
+    width: 20%;
+  }
+
+  .Joke-buttons svg {
+    width: 35px;
+  }
+
+  .Joke-emo {
+    font-size: 1.5rem;
+  }
+
+  .Joke-votes {
+    font-size: 18px;
+  }
+
+  .Joke-text {
+    width: 70%;
+    font-size: 1rem;
+  }
+}
