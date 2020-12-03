@@ -26,6 +26,7 @@ class Joke extends Component {
         <div className="Joke-buttons">
           <svg
             onClick={this.props.upvote}
+            className="vote-up-arrow"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -36,6 +37,7 @@ class Joke extends Component {
           </span>
           <svg
             onClick={this.props.downvote}
+            className="vote-down-arrow"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
