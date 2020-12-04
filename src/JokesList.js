@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Joke from "./Joke";
 import { ReactComponent as CatLaugh } from "./laugh_emoji.svg";
+import FlipMove from "react-flip-move";
 import "./JokesList.css";
 import { v4 as uuid } from "uuid";
 
@@ -175,16 +176,18 @@ class JokesList extends Component {
           </button>
         </div>
         <div className="JokesList-jokes">
-          {sortedJokes.map((j) => (
-            <Joke
-              text={j.joke}
-              votes={j.votes}
-              key={j.id}
-              id={j.id}
-              upvote={() => this.handleVote(j.id, 1)}
-              downvote={() => this.handleVote(j.id, -1)}
-            />
-          ))}
+          <FlipMove>
+            {sortedJokes.map((j) => (
+              <Joke
+                text={j.joke}
+                votes={j.votes}
+                key={j.id}
+                id={j.id}
+                upvote={() => this.handleVote(j.id, 1)}
+                downvote={() => this.handleVote(j.id, -1)}
+              />
+            ))}
+          </FlipMove>
         </div>
       </div>
     );
